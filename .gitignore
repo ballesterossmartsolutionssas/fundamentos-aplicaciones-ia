@@ -21,6 +21,7 @@ data/processed/*
 reports/*.pdf
 reports/*.docx
 !reports/informe_miniproyecto_2.docx
+!reports/informe_miniproyecto_2.pdf
 
 # OS / editor
 .DS_Store

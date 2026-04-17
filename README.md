@@ -100,11 +100,13 @@ Esto genera automaticamente:
 El informe editable para subir se deja en:
 
 - `reports/informe_miniproyecto_2.docx`
+- `reports/informe_miniproyecto_2.pdf`
 
 Para regenerarlo en este entorno se puede usar el runtime del workspace:
 
 ```powershell
 C:\Users\ASUS\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe src\export_report_docx.py
+C:\Users\ASUS\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe src\export_report_pdf.py
 ```
 
 ## Propuesta de modelos

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from datetime import datetime
 from pathlib import Path
 
 from docx import Document
@@ -12,6 +13,15 @@ ROOT = Path(__file__).resolve().parents[1]
 REPORTS_DIR = ROOT / "reports"
 INPUT_PATH = REPORTS_DIR / "informe_miniproyecto_2.md"
 OUTPUT_PATH = REPORTS_DIR / "informe_miniproyecto_2.docx"
+COURSE_NAME = "Fundamentos y Aplicaciones de Inteligencia Artificial"
+UNIVERSITY_NAME = "Universidad Autonoma de Occidente"
+PROFESSOR_NAME = "Juan Sebastian Mosquera Maturana"
+PROJECT_NAME = "MiniProyecto 2 - Clasificacion de niveles de obesidad"
+AUTHORS = [
+    "Valentina Popo Montilla",
+    "Juan Camilo Balleresteros Sierra",
+    "Santigo Rodriguez Gacha",
+]
 
 
 def set_default_font(document: Document) -> None:
@@ -27,6 +37,62 @@ def add_title(document: Document, text: str) -> None:
     run = paragraph.add_run(text)
     run.bold = True
     run.font.size = Pt(16)
+
+
+def add_cover_page(document: Document) -> None:
+    top = document.add_paragraph()
+    top.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = top.add_run(UNIVERSITY_NAME)
+    run.bold = True
+    run.font.size = Pt(16)
+
+    course = document.add_paragraph()
+    course.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = course.add_run(COURSE_NAME)
+    run.bold = True
+    run.font.size = Pt(14)
+
+    document.add_paragraph("")
+
+    title = document.add_paragraph()
+    title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = title.add_run(PROJECT_NAME)
+    run.bold = True
+    run.font.size = Pt(18)
+
+    subtitle = document.add_paragraph()
+    subtitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = subtitle.add_run("Informe final")
+    run.italic = True
+    run.font.size = Pt(13)
+
+    document.add_paragraph("")
+    document.add_paragraph("")
+
+    info = [
+        ("Profesor", PROFESSOR_NAME),
+        ("Fecha", datetime.now().strftime("%d/%m/%Y")),
+    ]
+    for label, value in info:
+        paragraph = document.add_paragraph()
+        paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run = paragraph.add_run(f"{label}: {value}")
+        run.font.size = Pt(12)
+
+    document.add_paragraph("")
+    members_title = document.add_paragraph()
+    members_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = members_title.add_run("Integrantes")
+    run.bold = True
+    run.font.size = Pt(12)
+
+    for author in AUTHORS:
+        paragraph = document.add_paragraph()
+        paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run = paragraph.add_run(author)
+        run.font.size = Pt(12)
+
+    document.add_page_break()
 
 
 def add_heading(document: Document, text: str, level: int) -> None:
@@ -181,6 +247,7 @@ def render_markdown(document: Document, markdown_text: str) -> None:
 def main() -> None:
     document = Document()
     set_default_font(document)
+    add_cover_page(document)
     render_markdown(document, INPUT_PATH.read_text(encoding="utf-8"))
     document.save(OUTPUT_PATH)
     print(f"Reporte Word generado en: {OUTPUT_PATH}")
