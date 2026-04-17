@@ -1,6 +1,8 @@
-# MiniProyecto 2 - Clasificacion de Obesidad
+# Fundamentos y Aplicaciones de IA
 
-Repositorio para la materia **Fundamentos y Aplicaciones de Inteligencia Artificial**.
+Repositorio general de la materia **Fundamentos y Aplicaciones de Inteligencia Artificial**.
+
+Este repositorio queda como base para organizar entregas, notebooks, informes y codigo de la asignatura. Actualmente contiene el desarrollo del **MiniProyecto 2: clasificacion de niveles de obesidad**.
 
 ## Integrantes
 
@@ -18,9 +20,9 @@ Repositorio para la materia **Fundamentos y Aplicaciones de Inteligencia Artific
 - **Variable objetivo real en el CSV:** `NObeyesdad`
 - **Clases:** Insufficient Weight, Normal Weight, Overweight Level I, Overweight Level II, Obesity Type I, Obesity Type II, Obesity Type III
 
-## Objetivo del trabajo
+## Trabajo actual
 
-Desarrollar un problema de clasificacion a partir del dataset seleccionado, cumpliendo con los entregables del miniproyecto:
+El contenido actual del repositorio desarrolla un problema de clasificacion a partir del dataset seleccionado, cumpliendo con los entregables del miniproyecto:
 
 1. Describir el dataset de forma detallada.
 2. Analizar las variables del dataset.
