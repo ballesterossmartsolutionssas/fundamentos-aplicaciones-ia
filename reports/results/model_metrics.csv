@@ -1,0 +1,5 @@
+model_key,label,course_type,cv_f1_macro,test_accuracy,test_balanced_accuracy,test_precision_macro,test_recall_macro,test_f1_macro,test_mcc
+svm_rbf,SVM con kernel RBF,Visto en clase,0.9546,0.9713,0.9704,0.9694,0.9704,0.9697,0.9665
+decision_tree,Arbol de Decision,Visto en clase,0.9318,0.9593,0.9586,0.9588,0.9586,0.9583,0.9526
+random_forest,Random Forest,No visto en clase,0.9334,0.9402,0.9379,0.9431,0.9379,0.9389,0.9307
+logistic_regression,Regresion Logistica,Visto en clase,0.9352,0.9402,0.9392,0.9382,0.9392,0.9383,0.9303

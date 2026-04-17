@@ -15,6 +15,7 @@ data/raw/*.csv
 data/raw/*.json
 data/processed/*
 !data/processed/.gitkeep
+!data/processed/obesity_clean.csv
 
 # Reports
 reports/*.pdf

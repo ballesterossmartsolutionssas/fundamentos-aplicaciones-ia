@@ -77,6 +77,22 @@ Esto generara:
 
 Si quieren trabajar en notebook, pueden usar Google Colab o instalar Jupyter por separado mas adelante.
 
+### 3. Ejecutar el trabajo completo
+
+```powershell
+python src\\run_analysis.py
+```
+
+Esto genera automaticamente:
+
+- `data/processed/obesity_clean.csv`
+- `reports/results/model_metrics.csv`
+- `reports/results/best_hyperparameters.json`
+- `reports/results/pruning_summary.json`
+- `reports/figures/*.png`
+- `reports/informe_miniproyecto_2.md`
+- `notebooks/miniproyecto_2_clasificacion_obesidad.ipynb`
+
 ## Propuesta de modelos
 
 Modelos sugeridos para cumplir el trabajo:

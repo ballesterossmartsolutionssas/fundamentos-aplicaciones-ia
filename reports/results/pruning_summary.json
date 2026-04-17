@@ -1,0 +1,10 @@
+{
+  "missing_threshold": 0.5,
+  "columns_over_missing_threshold": [],
+  "zero_variance_columns": [],
+  "high_correlation_pairs_over_0_85": [],
+  "dropped_columns": [],
+  "duplicate_rows_removed": 24,
+  "rows_after_cleaning": 2087,
+  "columns_after_cleaning": 17
+}
