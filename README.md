@@ -93,6 +93,18 @@ Esto genera automaticamente:
 - `reports/informe_miniproyecto_2.md`
 - `notebooks/miniproyecto_2_clasificacion_obesidad.ipynb`
 
+### 4. Exportar el informe a Word
+
+El informe editable para subir se deja en:
+
+- `reports/informe_miniproyecto_2.docx`
+
+Para regenerarlo en este entorno se puede usar el runtime del workspace:
+
+```powershell
+C:\Users\ASUS\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe src\export_report_docx.py
+```
+
 ## Propuesta de modelos
 
 Modelos sugeridos para cumplir el trabajo:
