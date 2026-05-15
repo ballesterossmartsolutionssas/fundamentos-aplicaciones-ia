@@ -52,7 +52,7 @@ cells = [
     ),
     code(
         """
-        !pip -q install kaggle scikit-learn seaborn
+        !pip -q install kagglehub scikit-learn seaborn
         """
     ),
     code(
@@ -64,6 +64,7 @@ cells = [
         import zipfile
         from pathlib import Path
 
+        import kagglehub
         import numpy as np
         import pandas as pd
         import matplotlib.pyplot as plt
@@ -92,24 +93,12 @@ cells = [
         OUTPUT_DIR.mkdir(exist_ok=True)
         """
     ),
-    md("## 1. Descargar dataset desde Kaggle"),
+    md("## 1. Descargar dataset desde KaggleHub"),
     code(
         """
-        from google.colab import files
-
-        kaggle_dir = Path.home() / ".kaggle"
-        kaggle_dir.mkdir(exist_ok=True)
-        kaggle_json = kaggle_dir / "kaggle.json"
-
-        if not kaggle_json.exists():
-            print("Sube tu archivo kaggle.json")
-            uploaded = files.upload()
-            if "kaggle.json" not in uploaded:
-                raise FileNotFoundError("No se subio kaggle.json")
-            shutil.move("kaggle.json", kaggle_json)
-
-        os.chmod(kaggle_json, 0o600)
-        !kaggle datasets download -d mostafaabla/garbage-classification -p /content/garbage_raw --unzip
+        dataset_path = kagglehub.dataset_download(DATASET_SLUG)
+        RAW_DIR = Path(dataset_path)
+        print("Path to dataset files:", RAW_DIR)
         """
     ),
     code(

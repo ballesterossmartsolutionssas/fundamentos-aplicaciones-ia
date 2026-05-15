@@ -28,7 +28,7 @@ Fuente: https://www.kaggle.com/mostafaabla/garbage-classification
 
 1. Abrir el notebook `notebooks/miniproyecto_3_garbage_classification_colab.ipynb`.
 2. Ejecutar las celdas en orden.
-3. Subir `kaggle.json` cuando Colab lo solicite.
+3. El dataset se descarga automaticamente con `kagglehub.dataset_download("mostafaabla/garbage-classification")`.
 4. Revisar los resultados exportados en `/content/garbage_outputs`.
 
 El notebook genera automaticamente matrices de confusion, classification report y curvas ROC-AUC para cada arquitectura.

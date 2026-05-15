@@ -1,36 +1,34 @@
 # Estado de ejecucion local - MiniProyecto 3
 
-Fecha de intento: 2026-05-15
+Fecha de ejecucion: 2026-05-15
 
-Se intento ejecutar localmente el flujo del MiniProyecto 3 con el dataset **Garbage Classification** de Kaggle:
+Primero se intento descargar el dataset con Kaggle CLI:
 
 ```powershell
 C:\tf310\Scripts\kaggle.exe datasets download -d mostafaabla/garbage-classification -p C:\fia_runs\garbage --unzip
 ```
 
-## Resultado
-
-La descarga no se pudo completar porque no existe un archivo de credenciales de Kaggle en:
-
-```text
-C:\Users\ASUS\.kaggle\kaggle.json
-```
-
-La salida del comando fue:
+Ese metodo fallo porque no existia `C:\Users\ASUS\.kaggle\kaggle.json`:
 
 ```text
 KeyError: 'username'
 ```
 
-## Interpretacion
+Luego se probo la alternativa oficial indicada en KaggleHub:
 
-El cuaderno del proyecto esta listo para ejecutarse, pero Kaggle exige autenticacion para descargar el dataset. Para correrlo en Colab o localmente se debe cargar un archivo `kaggle.json` valido de la cuenta de Kaggle.
+```python
+import kagglehub
 
-## Pasos para ejecutar
+path = kagglehub.dataset_download("mostafaabla/garbage-classification")
+print("Path to dataset files:", path)
+```
 
-1. Descargar `kaggle.json` desde la configuracion de cuenta de Kaggle.
-2. En Colab, subir el archivo cuando el cuaderno lo pida.
-3. En ejecucion local, ubicarlo en `C:\Users\ASUS\.kaggle\kaggle.json`.
-4. Volver a ejecutar el cuaderno `notebooks/miniproyecto_3_garbage_classification_colab.ipynb`.
+## Resultado actualizado
 
-Cuando el dataset este disponible, el cuaderno entrena y compara MLP, CNN y MobileNetV2, genera matriz de confusion, reporte de clasificacion y prediccion para imagen externa.
+La descarga con `kagglehub` funciono correctamente y dejo los archivos en:
+
+```text
+C:\Users\ASUS\.cache\kagglehub\datasets\mostafaabla\garbage-classification\versions\1
+```
+
+Por esto, el notebook fue actualizado para descargar el dataset con `kagglehub` y ya no depende de `kaggle.json`.
