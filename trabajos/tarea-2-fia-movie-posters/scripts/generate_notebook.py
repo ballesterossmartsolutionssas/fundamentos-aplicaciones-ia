@@ -1,27 +1,38 @@
 from __future__ import annotations
 
 import json
+import textwrap
+from itertools import count
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOK = ROOT / "notebooks" / "tarea_2_fia_movie_posters_colab.ipynb"
+CELL_COUNTER = count(1)
+
+
+def cell_id(prefix: str) -> str:
+    return f"{prefix}-{next(CELL_COUNTER):03d}"
 
 
 def md(source: str) -> dict:
+    source = textwrap.dedent(source).strip()
     return {
         "cell_type": "markdown",
+        "id": cell_id("md"),
         "metadata": {},
-        "source": [line + "\n" for line in source.strip().splitlines()],
+        "source": [line + "\n" for line in source.splitlines()],
     }
 
 
 def code(source: str) -> dict:
+    source = textwrap.dedent(source).strip()
     return {
         "cell_type": "code",
+        "id": cell_id("code"),
         "execution_count": None,
         "metadata": {},
         "outputs": [],
-        "source": [line + "\n" for line in source.strip().splitlines()],
+        "source": [line + "\n" for line in source.splitlines()],
     }
 
 
@@ -49,6 +60,7 @@ cells = [
     ),
     code(
         """
+        import ast
         import os
         import re
         import random
@@ -76,13 +88,13 @@ cells = [
 
         IMG_SIZE = (128, 128)
         BATCH_SIZE = 32
-        EPOCHS = 15
+        EPOCHS = 10
         MIN_GENRE_COUNT = 120
 
         ROOT = Path("/content")
         DATA_ROOT = ROOT / "Movies-Poster_Dataset"
         OUTPUT_DIR = ROOT / "movie_poster_outputs"
-        OUTPUT_DIR.mkdir(exist_ok=True)
+        OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
         """
     ),
     md("## 1. Descargar dataset"),
@@ -118,7 +130,7 @@ cells = [
             return None
 
         genre_col = pick_column(df.columns, [r"genre"])
-        imdb_col = pick_column(df.columns, [r"imdb", r"imdbid", r"imdb id"])
+        imdb_col = pick_column(df.columns, [r"imdb", r"imdbid", r"imdb id", r"^id$"])
         title_col = pick_column(df.columns, [r"title"])
 
         if genre_col is None:
@@ -132,20 +144,28 @@ cells = [
         for ext in ("*.jpg", "*.jpeg", "*.png"):
             image_files.extend(DATA_ROOT.rglob(ext))
 
-        image_by_stem = {p.stem.lower(): p for p in image_files}
+        def normalize_key(value):
+            return re.sub(r"[^a-zA-Z0-9]+", "", str(value)).lower()
+
+        image_by_stem = {normalize_key(p.stem): p for p in image_files}
         print("Imagenes encontradas:", len(image_files))
 
         def image_for_row(row):
             candidates = []
             if imdb_col is not None and pd.notna(row[imdb_col]):
-                raw = str(row[imdb_col]).strip()
-                candidates.extend([raw.lower(), raw.replace("tt", "").lower(), f"tt{raw}".lower()])
+                raw = normalize_key(row[imdb_col])
+                raw_without_tt = raw[2:] if raw.startswith("tt") else raw
+                candidates.extend([raw, raw_without_tt, f"tt{raw_without_tt}"])
             if title_col is not None and pd.notna(row[title_col]):
-                title = re.sub(r"[^a-zA-Z0-9]+", "", str(row[title_col])).lower()
-                candidates.append(title)
+                candidates.append(normalize_key(row[title_col]))
             for key in candidates:
                 if key in image_by_stem:
                     return str(image_by_stem[key])
+            for key in candidates:
+                if len(key) >= 4:
+                    for image_key, image_path in image_by_stem.items():
+                        if key in image_key:
+                            return str(image_path)
             return None
 
         df["filepath"] = df.apply(image_for_row, axis=1)
@@ -160,8 +180,18 @@ cells = [
         def parse_genres(value):
             if pd.isna(value):
                 return []
+            if isinstance(value, (list, tuple, set)):
+                return [str(p).strip() for p in value if str(p).strip()]
+            text = str(value).strip()
+            if text.startswith("[") and text.endswith("]"):
+                try:
+                    parsed = ast.literal_eval(text)
+                    if isinstance(parsed, (list, tuple, set)):
+                        return [str(p).strip() for p in parsed if str(p).strip()]
+                except (SyntaxError, ValueError):
+                    pass
             parts = re.split(r"\\||,|/", str(value))
-            return [p.strip() for p in parts if p.strip() and p.strip().lower() != "nan"]
+            return [p.strip().strip("'\\\"[]") for p in parts if p.strip() and p.strip().lower() != "nan"]
 
         df["genres_list"] = df[genre_col].apply(parse_genres)
         all_genres = pd.Series([g for genres in df["genres_list"] for g in genres])
@@ -374,11 +404,21 @@ cells = [
             print(f"{mlb.classes_[idx]}: {probs[idx]:.4f}")
         """
     ),
+    md("## 10. Descargar resultados de la ejecucion"),
+    code(
+        """
+        from google.colab import files
+
+        zip_path = shutil.make_archive(str(OUTPUT_DIR), "zip", OUTPUT_DIR)
+        print("Archivo generado:", zip_path)
+        files.download(zip_path)
+        """
+    ),
     md(
         """
         ## Nota para entrega
 
-        Descargar o compartir este notebook ejecutado. Para la sustentacion, usar la seccion final con una caratula externa y comparar los primeros 5 generos predichos con los generos reales de IMDB.
+        Descargar o compartir este notebook ejecutado. Para la sustentacion, usar la seccion final con una caratula externa y comparar los primeros 5 generos predichos con los generos reales de IMDB. El ZIP final incluye historial de entrenamiento, classification report, ROC-AUC, curvas y el mejor modelo guardado.
         """
     ),
 ]
